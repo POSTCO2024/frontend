@@ -25,3 +25,6 @@ dist-ssr
 # 특정 서버 및 퍼블릭 디렉토리 무시
 server/dist
 public/dist
+
+# vscode
+.vscode
