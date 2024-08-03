@@ -1,0 +1,10 @@
+{
+  "extends": "@postcoil/typescript-config",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+  },
+  "include": ["."],
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@postcoil/typescript-config",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "tsconfig.json",
+  "files": [
+    "tsconfig.json",
+    "base.json",
+    "vite.json"
+  ]
+}

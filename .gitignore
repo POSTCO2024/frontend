@@ -1,0 +1,27 @@
+# macOS 디렉토리 무시
+.DS_Store
+
+# node_modules 폴더 무시
+node_modules
+**/node_modules
+
+# TurboRepo 캐시 무시
+.turbo
+
+# 로그 파일 무시
+*.log
+
+# 빌드 출력 디렉토리 무시
+dist
+dist-ssr
+
+# 환경 파일 무시
+*.local
+.env
+
+# 캐시 디렉토리 무시
+.cache
+
+# 특정 서버 및 퍼블릭 디렉토리 무시
+server/dist
+public/dist
