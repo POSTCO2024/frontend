@@ -1,4 +1,4 @@
-name: FE CI/CD Pipeline
+name: FE CI Pipeline
 
 on:
   push:
@@ -60,13 +60,27 @@ jobs:
           name: ${{ matrix.service }}-build
           path: apps/${{ matrix.service }}/dist
 
-  deploy:
-    needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    strategy:
-      matrix:
-        service: [control, operation]
-    uses: ./.github/workflows/cd.yml
-    with:
-      service: ${{ matrix.service }}
-    secrets: inherit
+      - name: Configure AWS credentials
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Upload to S3
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          aws s3 sync apps/${{ matrix.service }}/dist s3://${{ secrets.ARTIFACT_BUCKET }}/${{ github.sha }}/${{ matrix.service }} --delete
+
+      - name: Trigger CodePipeline
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          aws codepipeline start-pipeline-execution --name ${{ secrets.CODEPIPELINE_NAME }}
+
+      - name: Invalidate CloudFront cache
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+
+    
