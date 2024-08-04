@@ -24,13 +24,11 @@ jobs:
           # 보여질 커밋 히스토리 수를 설정 
           fetch-depth: 2  
 
-      - uses: pnpm/action-setup@v4
-        with:
-          # pnpm 버전 설정 
-          cache: 'pnpm'
-          
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Cache Node.js modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.pnpm-store
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -55,3 +53,20 @@ jobs:
       - name: Test ${{ matrix.service }}
         run: pnpm test
         working-directory: apps/${{ matrix.service }}
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.service }}-build
+          path: apps/${{ matrix.service }}/dist
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    strategy:
+      matrix:
+        service: [control, operation]
+    uses: ./.github/workflows/cd.yml
+    with:
+      service: ${{ matrix.service }}
+    secrets: inherit
