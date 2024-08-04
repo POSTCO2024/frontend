@@ -76,7 +76,7 @@ jobs:
       - name: Trigger CodePipeline
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          aws codepipeline start-pipeline-execution --name ${{ secrets.CODEPIPELINE_NAME }}
+          aws codepipeline start-pipeline-execution --name frontend-pipeline-dev
 
       - name: Invalidate CloudFront cache
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
