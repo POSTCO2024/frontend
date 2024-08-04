@@ -1,0 +1,39 @@
+name: FE CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Test
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [control, operation]
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          # 보여질 커밋 히스토리 수를 설정 
+          fetch-depth: 2  
+
+      - uses: pnpm/action-setup@v4
+        with:
+          # pnpm 버전 설정 
+          version: 9
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          # 노드 버전 설정
+          node-version: 20
+          cache: 'pnpm'
+
+

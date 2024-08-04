@@ -1,8 +1,10 @@
 {
+  "name": "postcoil-frontend",
   "private": true,
   "scripts": {
     "clean": "rm -rf node_modules && rm -rf pnpm-lock.yaml && pnpm install",
     "build": "turbo run build",
+    "test": "turbo run test",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "start": "turbo run dev",
@@ -13,6 +15,5 @@
     "prettier": "^3.2.5",
     "turbo": "^2.0.11"
   },
-  "packageManager": "pnpm@8.15.6",
-  "name": "with-vite"
+  "packageManager": "pnpm@9.6.0"
 }
