@@ -13,7 +13,9 @@
   "dependencies": {
     "@postcoil/ui": "workspace:*",
     "@swc/core": "1.7.5",
+    "@types/antd": "^1.0.0",
     "@vitejs/plugin-react-swc": "3.7.0",
+    "antd": "^5.20.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

@@ -7,13 +7,17 @@
     ".": "./index.ts",
     "./counter": "./components/counter",
     "./header": "./components/header",
-    "./setup-counter": "./utils/counter"
+    "./setup-counter": "./utils/counter",
+    "./navigation": "./components/navigation"
   },
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"**/*.ts\""
   },
   "dependencies": {
+    "@ant-design/icons": "^5.4.0",
+    "@types/antd": "^1.0.0",
+    "antd": "^5.20.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
