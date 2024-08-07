@@ -1,5 +1,5 @@
 import React from 'react';
-import CommonModal from '../../../components/commons/CommonModal';
+import CommonModal from '../../../components/common/CommonModal';
 import { CheckCircleFilled } from '@ant-design/icons';
 
 interface PropsType {
