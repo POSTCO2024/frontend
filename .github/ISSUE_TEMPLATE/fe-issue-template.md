@@ -1,7 +1,7 @@
 ---
 name: FE Issue Template
 about: Postcoil's FE Issue Template ✨
-title: "[FEAT/태스크ID(혹은 작업명)/본인이름"
+title: "[FEAT/태스크ID(혹은 작업명)/본인이름] 제목"
 labels: ''
 assignees: ''
 
