@@ -8,7 +8,8 @@
     "./counter": "./components/counter",
     "./header": "./components/header",
     "./setup-counter": "./utils/counter",
-    "./navigation": "./components/navigation"
+    "./navigation": "./components/navigation",
+    "./searchbar": "./components/SearchBar"
   },
   "license": "MIT",
   "scripts": {

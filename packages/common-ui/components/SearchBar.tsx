@@ -2,7 +2,7 @@ import React from "react";
 import { AudioOutlined } from '@ant-design/icons';
 import { CascaderProps} from 'antd/es/cascader';
 import { Input, Space, Cascader } from 'antd';
-import './assets/scss/Searchbar.scss';
+import './assets/scss/SearchBar.scss';
 
 
 // info
