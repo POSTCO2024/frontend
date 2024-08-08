@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.tsx';
-import './index.css';
+import App from './App';
+import './index.scss';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <div style={{ width: '1920px', height: '1080px' }}>
+    <div>
       <App />
     </div>
   </React.StrictMode>,

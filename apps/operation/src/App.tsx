@@ -1,36 +1,24 @@
-import { useState } from 'react';
-import { Header } from '@postcoil/ui';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Navigation } from '@postcoil/ui';
 import './App.css';
 import logo from './assets/logo.svg';
 import human from './assets/human.svg';
-import { Layout, theme } from 'antd';
-
-const { Content } = Layout;
+import { ContentBoard } from '@postcoil/ui';
+import Button from '../../control/src/Button';
+import Button2 from '../../control/src/Button2';
 
 const App: React.FC = () => {
-  // const [count, setCount] = useState(0)
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
-      <Navigation logo={logo} human={human} />
-      <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
-        <Content style={{ margin: '24px 16px 0' }}>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          ></div>
-        </Content>
-      </Layout>
-    </div>
+    <Router>
+      <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
+        <Navigation logo={logo} human={human} />
+        <Routes>
+          <Route path="/button1" element={<ContentBoard Board={Button} />} />
+          <Route path="/button2" element={<ContentBoard Board={Button2} />} />
+        </Routes>
+      </div>
+    </Router>
   );
 };
 export default App;
