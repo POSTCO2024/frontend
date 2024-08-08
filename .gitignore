@@ -28,3 +28,6 @@ public/dist
 
 # vscode
 .vscode
+
+# .gitmessage.txt
+.gitmessage.txt
