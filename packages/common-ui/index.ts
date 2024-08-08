@@ -1,5 +1,5 @@
 // utils
-export { setupCounter } from "./utils/counter";
+export { setupCounter } from './utils/counter';
 
 // components
 export { Header } from "./components/header";
@@ -11,7 +11,7 @@ export { Button } from "./components/Button";
 export { Tab } from "./components/Tab";
 export { Table } from "./components/Table";
 
-
-
-
+export { Counter } from './components/counter';
+export { Navigation } from './components/Navigation';
+export { ContentBoard } from './components/ContentBoard';
 

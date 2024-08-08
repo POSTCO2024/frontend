@@ -1,33 +1,22 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import { Header } from '@postcoil/ui';
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Navigation } from '@postcoil/ui';
+import './App.css';
+import logo from './assets/logo.svg';
+import human from './assets/human.svg';
+import { ContentBoard } from '@postcoil/ui';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App: React.FC = () => {
   return (
-    <>
-      <div>
-      <Header title='테스트'/>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Router>
+      <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
+        <Navigation logo={logo} human={human} />
+        <Routes>
+          {/* <Route path="/button1" element={<ContentBoard Board={Button} />} />
+          <Route path="/button2" element={<ContentBoard Board={Button2} />} /> */}
+        </Routes>
       </div>
-      <h1>Vite + React + Operation</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
-
-export default App
+    </Router>
+  );
+};
+export default App;
