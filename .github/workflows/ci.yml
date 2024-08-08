@@ -44,9 +44,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install
         working-directory: apps/${{ matrix.service }}
-      
+  
+      - name: List files in current directory
+        run: ls -alh
+        working-directory: apps/${{ matrix.service }}
+
+      - name: List files in assets/scss directory
+        run: ls -alh apps/${{ matrix.service }}/assets/scss
+
       - name: Build ${{ matrix.service }}
-        run: pnpm run build
+        run: pnpm run build -- --debug
         working-directory: apps/${{ matrix.service }}
 
       - name: Test ${{ matrix.service }}
