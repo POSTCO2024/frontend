@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes } from 'react-router-dom';
 import { Navigation } from '@postcoil/ui';
 import './App.css';
 import logo from './assets/logo.svg';
