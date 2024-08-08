@@ -5,8 +5,6 @@ import './App.css';
 import logo from './assets/logo.svg';
 import human from './assets/human.svg';
 import { ContentBoard } from '@postcoil/ui';
-import Button from '../../control/src/Button';
-import Button2 from '../../control/src/Button2';
 
 const App: React.FC = () => {
   return (
@@ -14,8 +12,8 @@ const App: React.FC = () => {
       <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
         <Navigation logo={logo} human={human} />
         <Routes>
-          <Route path="/button1" element={<ContentBoard Board={Button} />} />
-          <Route path="/button2" element={<ContentBoard Board={Button2} />} />
+          {/* <Route path="/button1" element={<ContentBoard Board={Button} />} />
+          <Route path="/button2" element={<ContentBoard Board={Button2} />} /> */}
         </Routes>
       </div>
     </Router>
