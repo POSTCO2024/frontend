@@ -9,31 +9,22 @@ on:
       - main
 
 jobs:
-  build:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  build-and-test:
     name: Build and Test
     timeout-minutes: 15
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [control, operation]
+        package-type: [apps, packages]
 
     steps:
       - name: Check out code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2  
+          fetch-depth: 2
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
-
-      - name: Cache Node.js modules
-        uses: actions/cache@v4
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
@@ -43,21 +34,39 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-        working-directory: apps/${{ matrix.service }}
 
-      - name: Build ${{ matrix.service }}
-        run: pnpm run build -- --debug
-        working-directory: apps/${{ matrix.service }}
+      - name: Get package list
+        id: package-list
+        run: |
+          echo "packages=$(ls ${{ matrix.package-type }} | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
 
-      - name: Test ${{ matrix.service }}
-        run: pnpm test
-        working-directory: apps/${{ matrix.service }}
-      
-      - name: Upload artifact
+      - name: Build and Test
+        run: |
+          for package in $(echo ${{ steps.package-list.outputs.packages }} | jq -r '.[]'); do
+            echo "Processing $package"
+            cd ${{ matrix.package-type }}/$package
+            pnpm run build
+            pnpm test
+            cd ../..
+          done
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.service }}-build
-          path: apps/${{ matrix.service }}/dist
+          name: ${{ matrix.package-type }}-builds
+          path: ${{ matrix.package-type }}/**/dist
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build-and-test
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -71,11 +80,14 @@ jobs:
       
       - name: Upload to artifact S3
         run: |
-          aws s3 sync apps/${{ matrix.service }}/dist s3://${{ secrets.ARTIFACT_BUCKET }}/${{ env.DATE }}/${{ matrix.service }} --delete
+          aws s3 sync artifacts s3://${{ secrets.ARTIFACT_BUCKET }}/${{ env.DATE }} --delete
 
-      - name: Upload to deployment S3
+      - name: Upload apps to deployment S3
         run: |
-          aws s3 sync apps/${{ matrix.service }}/dist s3://dev-${{ secrets.S3_BUCKET_NAME_PREFIX }}-${{ matrix.service }}-app --delete
+          for app in artifacts/apps/*; do
+            app_name=$(basename $app)
+            aws s3 sync $app s3://dev-${{ secrets.S3_BUCKET_NAME_PREFIX }}-${app_name}-app --delete
+          done
 
       - name: Trigger CodePipeline
         run: |

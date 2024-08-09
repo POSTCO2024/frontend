@@ -4,12 +4,7 @@
   "main": "index.ts",
   "types": "index.ts",
   "exports": {
-    ".": "./index.ts",
-    "./counter": "./components/counter",
-    "./header": "./components/header",
-    "./setup-counter": "./utils/counter",
-    "./navigation": "./components/navigation",
-    "./searchbar": "./components/SearchBar"
+    ".": "./index.ts"
   },
   "license": "MIT",
   "scripts": {

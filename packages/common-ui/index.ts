@@ -1,15 +1,15 @@
 // utils
-export { setupCounter } from './utils/counter';
+export * from './utils/counter';
 
 // components
 // export { Header } from "./components/header";
-export { SearchBar } from "./components/SearchBar";
-export { DatePicker } from "./components/DatePicker";
-export { Dropdown } from "./components/Dropdown";
-export { Button } from "./components/Button";
-export { Tab } from "./components/Tab";
-export { Table } from "./components/Table";
+export * from "./components/SearchBar";
+export *from "./components/DatePicker";
+export * from "./components/Dropdown";
+export * from "./components/Button";
+export * from "./components/Tab";
+export * from "./components/Table";
 
-export { Navigation } from './components/Navigation';
-export { ContentBoard } from './components/ContentBoard';
+export * from './components/Navigation';
+export * from './components/ContentBoard';
 
