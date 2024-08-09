@@ -1,18 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { Navbar, NavbarDivider, NavbarGroup, NavbarHeading } from "@blueprintjs/core";
 import SearchBar from "../components/SearchBar";
 import DataTable from "../components/DataTable";
 import StatusCard from "../components/StatusCard";
 import CommonPagination from "../components/SharePagination";
+import useDashboardStore from "../store/useDashboardStore";
 
 const Dashboard: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalItems = 100; // 예시
-
-  const handlePageChange = (page: number, pageSize?: number) => {
-    setCurrentPage(page);
-    console.log(`페이지 ${page} (페이지 크기: ${pageSize})`);
-  };
+  const currentPage = useDashboardStore((state) => state.currentPage);
+  const totalItems = useDashboardStore((state) => state.totalItems);
+  const handlePageChange = useDashboardStore((state) => state.handlePageChange);
 
   return (
     <div className="dashboard" style={{ padding: "20px" }}>
@@ -49,7 +46,6 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
       <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-
         <CommonPagination
           current={currentPage}
           total={totalItems}

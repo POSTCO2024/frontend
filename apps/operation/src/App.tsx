@@ -34,8 +34,9 @@
 
 
 import React from "react";
-import Sidebar from "./components/SideBar";
 import Dashboard from "./pages/Dashboard";
+import Sidebar from "./components/SideBar";
+
 
 const App: React.FC = () => (
   <div className="app" style={{ display: "flex" }}>
