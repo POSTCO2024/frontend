@@ -75,13 +75,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
           
-      - name: Set DATE environment variable
-        run: echo "DATE=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
-      
-      - name: Upload to artifact S3
-        run: |
-          aws s3 sync artifacts s3://${{ secrets.ARTIFACT_BUCKET }}/${{ env.DATE }} --delete
-
       - name: Upload apps to deployment S3
         run: |
           for app in artifacts/apps/*; do
