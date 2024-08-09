@@ -1,0 +1,12 @@
+.result {
+  width: 50%;
+  margin: 10px;
+
+  .resultBtns {
+    display: flex;
+    justify-content: end;
+    button {
+      margin: 20px 5px;
+    }
+  }
+}
