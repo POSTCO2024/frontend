@@ -1,73 +1,64 @@
-name: FE CI Pipeline
+name: FE CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  build-and-test:
-    name: Build and Test
-    timeout-minutes: 15
+  lint-common-ui:
+    name: Lint Common UI
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package-type: [apps, packages]
-
     steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Get package list
-        id: package-list
-        run: |
-          echo "packages=$(ls ${{ matrix.package-type }} | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-
-      - name: Build and Test
-        run: |
-          for package in $(echo ${{ steps.package-list.outputs.packages }} | jq -r '.[]'); do
-            echo "Processing $package"
-            cd ${{ matrix.package-type }}/$package
-            pnpm run build
-            pnpm test
-            cd ../..
-          done
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - run: pnpm install --filter packages/common-ui
+      - run: pnpm run lint --filter packages/common-ui
+      - uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.package-type }}-builds
-          path: ${{ matrix.package-type }}/**/dist
+          name: common-ui-source
+          path: packages/common-ui
+
+  build-and-test-apps:
+    name: Build and Test Apps
+    needs: lint-common-ui
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [control, operation]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - uses: actions/download-artifact@v4
+        with:
+          name: common-ui-source
+          path: packages/common-ui
+      - run: pnpm install --filter apps/${{ matrix.service }}
+      - run: pnpm run build --filter apps/${{ matrix.service }}
+      - run: pnpm run test --filter apps/${{ matrix.service }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.service }}-build
+          path: apps/${{ matrix.service }}/dist
 
   deploy:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    needs: build-and-test
     name: Deploy
+    needs: build-and-test-apps
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
-
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+      
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -77,9 +68,8 @@ jobs:
           
       - name: Upload apps to deployment S3
         run: |
-          for app in artifacts/apps/*; do
-            app_name=$(basename $app)
-            aws s3 sync $app s3://dev-${{ secrets.S3_BUCKET_NAME_PREFIX }}-${app_name}-app --delete
+          for service in control operation; do
+            aws s3 sync ${service}-build s3://dev-${{ secrets.S3_BUCKET_NAME_PREFIX }}-${service}-app --delete
           done
 
       - name: Trigger CodePipeline
