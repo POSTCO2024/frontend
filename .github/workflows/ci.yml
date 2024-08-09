@@ -73,6 +73,10 @@ jobs:
       - name: Set DATE environment variable
         run: echo "DATE=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
 
+      - name: Upload to artifact S3
+        run: |
+          aws s3 sync artifacts s3://${{ secrets.ARTIFACT_BUCKET }}/${{ env.DATE }} --delete
+
       - name: Upload apps to deployment S3
         run: |
           for app in apps/*/dist; do
